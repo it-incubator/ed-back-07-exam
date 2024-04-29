@@ -36,5 +36,12 @@ userRouter.post('/registration', async (req: Request, res: Response<UserViewType
 
   const user = await userRepository.getUser(result.data!);
 
-  res.status(201).send(user! as unknown as UserViewType);
+  if(!user) {
+    //error if just created user not found
+    res.status(500).send('something went wrong');
+
+    return;
+  }
+
+  res.status(201).send(user as unknown as UserViewType);
 });

@@ -1,6 +1,7 @@
 import { MongoClient } from 'mongodb';
 import { settings } from '../settings';
-import {UserType} from '../services/user-service';
+
+import {UserType} from "../repository/user-repository";
 
 const mongoUri = settings.MONGO_URI;
 

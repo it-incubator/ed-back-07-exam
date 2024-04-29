@@ -1,6 +1,6 @@
 import {ObjectId, WithId} from "mongodb";
-import {UserType} from "../services/user-service";
 import {usersCollection} from "../db/runDb";
+import {UserType} from "./user-repository";
 
 export type UserViewType = {
     name: string;

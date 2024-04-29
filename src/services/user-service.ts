@@ -1,13 +1,5 @@
-import { userRepository } from '../repository/user-repository';
-import { ObjectId, WithId } from 'mongodb';
-import { cryptoService } from './crypto-service';
-
-export type UserType = {
-  name: string;
-  login: string;
-  passwordHash: string;
-  age: number;
-};
+import {userRepository} from '../repository/user-repository';
+import {cryptoService} from './crypto-service';
 
 export enum ResultCode {
   Success = 0,
