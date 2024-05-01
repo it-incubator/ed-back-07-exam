@@ -1,9 +1,8 @@
-import {ObjectId, WithId} from "mongodb";
+import {ObjectId} from "mongodb";
 import {usersCollection} from "../db/runDb";
-import {UserType} from "./user-repository";
 
 export type UserViewType = {
-    name: string;
+    email: string;
     login: string;
     id: string
 }
@@ -13,7 +12,7 @@ export const userQueryRepository = {
         const results = await usersCollection.find().toArray();
 
         return results.map((result)=> ({
-            name: result.name,
+            email: result.email,
             login: result.login,
             id: result._id.toString(),
         }))
@@ -27,7 +26,7 @@ export const userQueryRepository = {
         }
 
         return {
-            name: result.name,
+            email: result.email,
             login: result.login,
             id: result._id.toString(),
         }

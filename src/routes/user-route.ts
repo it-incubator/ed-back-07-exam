@@ -22,11 +22,11 @@ userRouter.get('/', async (req: Request, res: Response) => {
 });
 
 userRouter.post('/registration', async (req: Request, res: Response<UserViewType | string>) => {
-  const name = req.body.name;
+  const email = req.body.email;
   const login = req.body.login;
   const password = req.body.password;
   const age = req.body.age;
-  const result = await userService.registerUser(name, login, password, age);
+  const result = await userService.registerUser(email, login, password, age);
 
   if(result.resultCode !== ResultCode.Success) {
     res.status(resultCodeToHttpException(result.resultCode)).send(result.errorMessage);

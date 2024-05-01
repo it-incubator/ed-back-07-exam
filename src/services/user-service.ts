@@ -1,5 +1,6 @@
 import {userRepository} from '../repository/user-repository';
 import {cryptoService} from './crypto-service';
+import {emailAdapter} from "../adapters/email.adapter";
 
 export enum ResultCode {
   Success = 0,
@@ -28,8 +29,12 @@ export type Result<T> = {
   errorMessage?: string,
 }
 
+function generateUniqCode() {
+  return 'code'
+}
+
 export const userService = {
-  async registerUser(name: string, login: string, password: string, age: number): Promise<Result<string | null>> {
+  async registerUser(email: string, login: string, password: string, age: number): Promise<Result<string | null>> {
     if(age < 18) {
       return handleForbiddenResult('too yang');
     }
@@ -37,12 +42,19 @@ export const userService = {
     const salt = await cryptoService.generateSalt();
     const passwordHash = await cryptoService.generateHash(password, salt);
 
-    const createdId = await userRepository.createUser(name, login, passwordHash, age);
+    const createdId = await userRepository.createUser(email, login, passwordHash, age);
+    const code = generateUniqCode();
+
+    try {
+        await emailAdapter.sendRegistrationEmail(email, code);
+    } catch (error) {
+      console.log(error);
+    }
 
     return handleSuccessResult(createdId.toString());
   },
 
-  async updateUser(id: string, login: string, name: string, age: number): Promise<void> {
-    return  userRepository.updateUser(id, { login, name, age });
+  async updateUser(id: string, login: string, email: string, age: number): Promise<void> {
+    return  userRepository.updateUser(id, { login, email, age });
   },
 };

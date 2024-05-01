@@ -2,7 +2,7 @@ import {ObjectId, WithId} from 'mongodb';
 import {usersCollection} from '../db/runDb';
 
 export type UserType = {
-  name: string;
+  email: string;
   login: string;
   passwordHash: string;
   age: number;
@@ -16,13 +16,17 @@ export const userRepository = {
     return usersCollection.findOne({ _id: new ObjectId(id)});
   },
 
-  async createUser(name: string, login: string, passwordHash: string, age: number): Promise<ObjectId> {
-    const result = await usersCollection.insertOne({ name, login, passwordHash, age });
+  getUserByLogin(login: string): Promise<WithId<UserType> | null> {
+    return usersCollection.findOne({ login });
+  },
+
+  async createUser(email: string, login: string, passwordHash: string, age: number): Promise<ObjectId> {
+    const result = await usersCollection.insertOne({ email: email, login, passwordHash, age });
 
     return result.insertedId;
   },
 
-  async updateUser(id: string, { name, login, age }: Omit<UserType, 'passwordHash'>): Promise<void> {
-    await usersCollection.updateOne({ _id: new ObjectId(id) }, { name, login, age });
+  async updateUser(id: string, { email, login, age }: Omit<UserType, 'passwordHash'>): Promise<void> {
+    await usersCollection.updateOne({ _id: new ObjectId(id) }, { email, login, age });
   },
 };

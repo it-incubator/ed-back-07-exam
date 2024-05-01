@@ -19,7 +19,8 @@
     "watch": "tsc -w",
     "build": "tsc",
     "start": "node dist/index.js",
-    "jest": "jest -i"
+    "jest": "jest -i",
+    "jest-registration": "jest registration.e2e.test.ts"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
