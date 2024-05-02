@@ -1,7 +1,8 @@
 import {Request, Response, Router} from 'express';
-import {ResultCode, userService} from '../services/user-service';
+import {userService} from '../services/user-service';
 import {userQueryRepository, UserViewType} from "../repository/user-query-repo";
 import {userRepository} from "../repository/user-repository";
+import {ResultCode} from "../common/result-code";
 
 const resultCodeToHttpException = (resultCode: ResultCode): number => {
   switch (resultCode) {

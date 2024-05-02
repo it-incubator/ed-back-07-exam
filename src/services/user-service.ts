@@ -1,37 +1,9 @@
 import {userRepository} from '../repository/user-repository';
 import {cryptoService} from './crypto-service';
 import {emailAdapter} from "../adapters/email.adapter";
-
-export enum ResultCode {
-  Success = 0,
-  Forbidden = 1,
-  BadRequest = 2,
-}
-
-const handleSuccessResult = <T>(data: T):Result<T> => {
-  return {
-    data,
-    resultCode: ResultCode.Success,
-  }
-}
-
-const handleForbiddenResult = (message: string):Result<null> => {
-  return {
-    data: null,
-    resultCode: ResultCode.Forbidden,
-    errorMessage: message,
-  }
-}
-
-export type Result<T> = {
-  data: T,
-  resultCode: ResultCode,
-  errorMessage?: string,
-}
-
-function generateUniqCode() {
-  return 'code'
-}
+import {userQueryRepository} from "../repository/user-query-repo";
+import {handleForbiddenResult, handleNotFoundResult, handleSuccessResult, Result} from "../common/result-code";
+import {generateUniqCode} from "../helpers/generate-uniq-code";
 
 export const userService = {
   async registerUser(email: string, login: string, password: string, age: number): Promise<Result<string | null>> {
@@ -54,7 +26,17 @@ export const userService = {
     return handleSuccessResult(createdId.toString());
   },
 
-  async updateUser(id: string, login: string, email: string, age: number): Promise<void> {
-    return  userRepository.updateUser(id, { login, email, age });
+  async updateUser(id: string, login: string, email: string, age: number): Promise<Result<null>> {
+    const user  = await userQueryRepository.getUser(id);
+
+    if(!user) {
+      return handleNotFoundResult('such user not found');
+    }
+
+    //TODO: add business logic: only a user with Active status can be updated
+
+    await userRepository.updateUser(id, { login, email, age });
+
+    return handleSuccessResult(null);
   },
 };

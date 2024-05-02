@@ -4,7 +4,7 @@ import {usersCollection} from "../db/runDb";
 export type UserViewType = {
     email: string;
     login: string;
-    id: string
+    id: string;
 }
 
 export const userQueryRepository = {
